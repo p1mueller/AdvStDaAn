@@ -1,0 +1,55 @@
+\documentclass[titlepage=true]{scrartcl}
+
+\input{header/zusammenfassung}
+% \input{header/hyperref}
+
+\input{header/listings}
+\input{header/tikz}
+% \usepackage{textgreek}
+% \usepackage{paracol}
+% \usepackage{dirtytalk}
+% \usepackage{pdfpages}
+\usetikzlibrary{positioning}
+\setDefaultArrayStretch{1.8}
+
+\makeatletter
+
+% Newline after a paragraph
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+	{-3.25ex\@plus -1ex \@minus -.2ex}%
+	{1.5ex \@plus .2ex}%
+	{\normalfont\normalsize\bfseries}}
+\makeatother
+
+\title{Advanced Statistical Data Analysis}
+\author{\input{Contributors}}
+\begin{document}
+% \begin{titlepage}
+% 	\thispagestyle{empty}
+% 	\maketitle
+% \end{titlepage}
+
+\lstset{style=C}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{5}
+\tableofcontents \newpage
+
+\part{Advanced Regression Modelling}
+\input{sections/MultipleLinearRegression/main}
+\input{sections/ModelFitting/main}
+\input{sections/ModelAdequacy/main}
+\input{sections/LogisticRegression/main}
+\input{sections/GLM/main}
+
+\clearpage
+\part{Bayesian Statistics}
+\input{sections/BayesDataAnalysis/main}
+\input{sections/ExactBayes/main}
+\input{sections/MCMC/main}
+\input{sections/Distributions/main}
+\input{sections/Examples/main}
+
+% \includepdf[pages=-]{sections/exam-1}
+% \includepdf[pages=-]{sections/exam-2}
+
+\end{document}

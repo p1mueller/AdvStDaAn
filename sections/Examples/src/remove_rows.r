@@ -1,0 +1,1 @@
+data_less <- data[-c(10, 20),] # Remove rows 10 and 20

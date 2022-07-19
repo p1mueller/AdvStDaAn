@@ -1,0 +1,1 @@
+data$fvx3 <- as.factor(data$x3)

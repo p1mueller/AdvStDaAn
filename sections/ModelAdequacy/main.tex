@@ -1,0 +1,219 @@
+% !TEX root = ../../AdvStaDaAn.tex
+\section{Model Adequacy}
+
+\subsection{Tukey's First-Aid Transformations}
+\begin{tabular}{l c}
+Variable Type               & Transformation                \\
+\hline
+Concentrations or Amounts   & $\log{x}$                     \\
+Counts                      & $\sqrt{x}$ or $\log{x}$       \\
+Counted Fractions or Shares & $\log \frac{x+0.005}{1.01-x}$ \\
+\end{tabular}
+
+\subsection{Categorical Predictors}
+\begin{itemize}
+\item Factor variables allow the inclusion of qualitative or categorical
+predictors in the mean function of a multiple linear regression model.
+\item To include factors in a multiple linear regression mean function,
+we need a way to indicate which particular level of the factor is present for
+each case in the data.
+\item For a factor with two levels, an indicator variable can be used
+\end{itemize}
+
+\subsection{Multicollinearity}
+\begin{itemize}
+\item If at least one predictor is a linear combination of others (also called
+(exact) \textbf{collinearity}), then $X^T X$ is singular! Consequently, there
+is no unique least squares estimate for $\underline{\widehat{\beta}}$.
+\item If $X^T X$ is close to singular, we have (approximate) collinearity or
+\textbf{multicollinearity}.
+This case is more delicate than perfect collinearity in practical regression
+analysis, as there will be a (technically) unique solution, but it is often
+highly variable and of poor quality.
+\item The multicollinearity also causes \textbf{serious problems with the
+interpretation} of the parameter estimates as well as of the inferential
+results.
+\end{itemize}
+
+\subsubsection{Detection of Collinearity}
+\begin{itemize}
+\item Examination of the correlation matrix of the predictors will reveal large
+pairwise collinearities.
+\item A regression of $x_k$ on all other predictors yields a corresponding
+$R_k^2$.
+Repeat it for all predictors.
+\item Ofthe the \textbf{Variance Inflaction Factor (VIF)} is used to detect
+multicollinearity.
+\begin{align*}
+\var{\widehat{\beta}_k}
+=
+\sigma^2 \frac{1}{1-R_k^2}
+\frac{1}{\sum_{i=1}^n( x_i^{(k)} - \overline{x}_k)^2}
+\end{align*}
+The middle term $\text{VIF}_k := 1/(1-R_k^2)$ is the factor with which the
+variance of the estimated $\widehat{\beta}_k$ is inflated when
+multicollinearity
+exists.
+If $\text{VIF}_k$ is larger than 5 to 10 for any variable then
+multicollinearity is of a dangerous size and needs to be addressed.
+\end{itemize}
+
+\subsection{Model Adequacy Checking}
+It is always necessary to examine a fitted regression model to ensure that
+\begin{itemize}
+\item it provides an adequate approximation to the “true” system underlying
+the data
+\item verify that none of the regression assumptions are violated.
+\end{itemize}
+\textbf{Notice:} inadequate regression models will give poor or misleading
+results when applied in prediction or interference.
+
+\subsubsection{Diagnostic plots}
+\begin{itemize}
+\item \textbf{Tukey-Anscombe plot (Residual plot)}: residuals against the
+fitted values. Is used to detect nonconstant expectation of the errors.
+\item \textbf{Scale-location plot}: square root of the absolute values of the
+standardized residuals against fitted values. Is used to detect
+nonconstant
+variance of the errors.
+\item \textbf{Normal Q-Q plot}: Ordered standardized residuals against
+their expected values under normality. Is used to detect nonnormality of
+the
+erros.
+\item \textbf{Residuals against time and/or space variables}: Is used to
+detect autocorrelation (i.e, a form of stochastic dependency) in the
+erros
+\item \textbf{Sensitivity plot}: Standardizes residuals against leverage
+overlad by Cook's distance contours. Is used to detect too influential
+observation in the data.
+\end{itemize}
+
+\subsubsection{Sensitivity Analysis}
+\begin{itemize}
+\item Occasionally, we find that a small subset of observations exerts a
+disproportionate influence on the fitted regression model.
+\item We would like to locate these influential observations and assess
+their impact on the model.
+\item Cook has suggested using a measure of the squared distance between
+the least squares estimate, $\widehat{\beta}$, based on all $n$ observations
+and the estimate, say least squares estimate, $\widehat{\beta}_{(i)}$,
+obtained by deleting the $i$th observations
+\item Practical experience has shown that observations with a Cook's
+distance $d_i$ larger than 1 can be considered as too influential.
+\begin{align*}
+d_i
+ & =
+\frac{(\widehat{y}_{(i)} - \widehat{y})^T(\widehat{y}_{(i)} - \widehat{y})}
+{p \cdot \widehat{\sigma}^2}
+=
+\frac{1}{p}\widetilde{R}_i^2\frac{H_{ii}}{1-H_{ii}}
+\\
+d_i^\circledast
+ & =
+\frac{1}{p}\frac{R_i^2}{\widehat\phi V(\widehat\mu_i (1 - H_{ii}))}
+\frac{H_{ii}}{1 - H_{ii}}
+\end{align*}
+\end{itemize}
+
+\subsection{Validation}
+We need (general) methods that can be used to judge how well a model (or
+procedure) will predict with future data sampled which is from the same
+population or data-generating mechanism that produced the current data.
+
+A common train/validation splits are between 50\;\% and 75\;\%
+
+\subsubsection{Cross Validation}
+\begin{itemize}
+\item When dataset is too small to be divided into a learning set and a
+validation set usefully, one can switch to \textbf{cross-validation}.
+\item Basic idea of a so-called \textbf{5-fold cross validation}
+\begin{itemize}
+\item Split the data into 5 parts
+\item Select one of these parts as validation set and the remainin data will be
+used for estimation
+\item Select another part as validation set and proceed as in the previous step
+\begin{itemize}
+\item Repeat this until each part has been used as validation dataset
+\end{itemize}
+\end{itemize}
+\item Compute the prediction error ($\widehat{y}_i^\text{Test} - y_i$) for all
+obersvations and determine the \textbf{mean squared prediction error (MSPE)}:
+\begin{align*}
+\text{MSPE}_\text{CV}
+=
+\frac{1}{n} \sum_{i=1}^n \left(\widehat{y}_i^\text{Test} - y_i\right)^2.
+\end{align*}
+\end{itemize}
+
+\subsubsection{PRESS}
+\begin{itemize}
+\item Predictive models are assessed often by the \textbf{leave-one-out
+method}
+\item Extreme case of cross validation
+\begin{align*}
+\text{PRESS}
+=
+\sum_{i=1}^n \widehat{e}_i^2
+=
+\sum_{i=1}^n \left( y_i - \widehat{y}_{(i)}\right)^2
+\end{align*}
+\item in linear regression, $\widehat{e}_i$ can be calculated from the
+results of a single least squares fit to all $n$ observations:
+$\widehat{e}_i=\frac{r_i}{1-H_{ii}}$.
+\end{itemize}
+
+\subsection{Casuality}
+\begin{itemize}
+\item A regression model \textbf{does not imply a cause-effect relationship!}
+\item To establish causality,
+the relationship between explanatory variables and
+the response must have a basis outside the sample data -
+for example,
+the relationship may be suggested by theoretical considerations
+\item Regression analysis can aid in confirming a cause-effect relationship,
+but it cannot be the sole basis of such a claim.
+\end{itemize}
+
+\subsection{GLM}
+\begin{align*}
+H
+:=
+W^{1/2} X \left( X^T W X \right)^{-1} X^T W^{1/2}
+\end{align*}
+
+\subsubsection{Residuals}
+\begin{description}
+\item[Response residuals:] $R_i := Y_i - \widehat\mu_i$
+\begin{itemize}
+\item $R_i$ will not be Gaussian distributed in general
+\item Variance is approximately $\phi V(\mu_i) / w_i (1 - H_{ii})$
+\end{itemize}
+\item[Pearson residuals:]
+$R_i^{(P)} := R_i \cdot w_i / \sqrt{(V(\widehat\mu_i))}$
+Still are not generally Gaussian distributed
+\item[Working residuals:] $R_i^{(W)} := R_i g'(\widehat\mu_i)$
+\item[Deviance residuals:]
+$R_i^{(D)} := \operatorname{sign}(y_i - \widehat\mu_i) \sqrt{d_i}$,
+where $d_i = 2(b(y_i) - b(\widehat\mu_i)) y_i + 2(c(\widehat\mu_i) - c(y_i))$.
+The variance is also approximately constant
+$\var\left(R_i^{(D)}\right) \approx \phi (1 - H_{ii})$
+\end{description}
+
+\begin{tabular}{r l}
+\hline
+Distribution           & Deviance residuals
+\\\hline
+$\mathcal{N}$          & $d_i = (Y_i - \widehat\mu_i)^2 = R_i^2$
+\\
+$\mathcal{B}(m, \pi)$  &
+$d_i = 2 w_i Y_i \log\frac{Y_i}{\widehat\mu_i} + $
+$2 w_i(1-Y_i)\log\frac{1-Y_i}{1-\widehat\mu_i}$,
+where $Y_i$ is a proportion
+\\
+$\mathcal{P}(\lambda)$ &
+$d_i = 2 Y_i \log\frac{Y_i}{\widehat\mu_i} + 2(Y_i - \widehat\mu_i)$
+\\
+$\Gamma(\alpha,\beta)$ & $d_i = 2\log\frac{Y_i}{\widehat\mu_i} +$
+$2 \frac{Y_i - \widehat\mu_i}{\widehat\mu_i}$
+\\\hline
+\end{tabular}

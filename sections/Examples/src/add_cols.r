@@ -1,0 +1,1 @@
+data2 <- cbind(data2, data[,c("x3","x4")])

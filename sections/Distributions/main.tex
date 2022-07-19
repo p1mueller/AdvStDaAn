@@ -1,0 +1,283 @@
+\section{Distributions}
+\subsection{Bernoulli}
+$X$ describes the probability of success/failure, yes/no, on/off, true/false or
+one/zero in a single trial experiment, like a coin toss, state of machine, ...
+\begin{align*}
+X \sim \text{Bernoulli}(\theta)
+, &  &
+P(X=1)
+=
+\theta
+, &  &
+f(x)
+=
+p(x|\theta)
+=
+\begin{cases}
+1-\theta & \text{if } x=0 \\
+\theta   & \text{if } x=1 \\
+0        & \text{else}
+\end{cases}
+, &  &
+F(X)
+=
+P(X \leq x)
+=
+\begin{cases}
+0        & \text{for } x < 0       \\
+1-\theta & \text{if } 0 \leq x < 1 \\
+1        & \text{if } x \geq 1
+\end{cases}
+\\
+\end{align*}
+
+\subsection{Binomial}
+$X$ takes integer values in $\{0,1,2,\ldots,n\}$ and is distributed as the sum
+of $n$ i.i.d Bernoulli experiments.
+Describes the number of successes in a sample of size $n$,
+like e.g. in coin tossing, quality control, ...
+\begin{align*}
+X
+\sim
+\text{Binom}(n,\theta)
+, &  &
+f(x)
+=
+p(x|n,\theta)
+=
+\binom{n}{x} \theta^x (1 - \theta)^{n - x}
+, &  &
+F(X)
+=
+P(X \leq x)
+=
+\sum_{k=0}^{\lfloor x\rfloor}\binom{n}{k} \theta^k (1 - \theta)^{n-k}
+\\
+\mathbb{E}(X)
+=
+n \theta
+, &  &
+\var(X)
+=
+n \theta (1 - \theta)
+\end{align*}
+
+\subsection{Uniform}
+\begin{align*}
+X
+\sim
+\text{Unif}(a,b)
+, &  &
+f(x)
+=
+p(x|a,b)
+=
+\begin{cases}
+\frac{1}{b-a} & \text{for } 0 \leq x \leq 1 \\
+0             & \text{else}
+\end{cases}
+, &  &
+F(X)
+=
+P(X \leq x)
+=
+\begin{cases}
+0               & \text{for } x < a           \\
+\frac{x-a}{b-a} & \text{for } a \leq x \leq b \\
+1               & \text{for } x > b
+\end{cases}
+\\
+\mathbb{E}(X)
+=
+\frac{a + b}{2}
+, &  &
+\var(X)
+=
+\frac{(b - a)^2}{12}
+\end{align*}
+
+\subsection{Beta}
+$X \sim \text{Beta}(a,b)$, where $a,b \in \mathbb{R}^+$ are shape parameters.
+$X$ takes real values in the interval $(0,1)$.
+\begin{align*}
+f(x)
+=
+p(x|a,b)
+=
+\begin{cases}
+\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^{a-1} (1 - x)^{b-1}
+  &
+\text{if } 0 < x< 1
+\\
+0 & \text{else}
+\end{cases}
+, &                       &
+\mathbb{E}(X)
+=
+\frac{a}{a+b}
+\\
+\var(X)
+=
+\frac{a b}{(a + b + 1) (a + b)^2}
+, &                       &
+\operatorname{mode}(X)
+=
+\frac{a - 1}{a + b - 2}
+  & \quad \forall a,b > 1
+\end{align*}
+
+\subsection{Geometric}
+$X \sim \text{Geom}(\theta)$ takes values in $\mathbb{N}_0 = 0,1,2,3,\ldots$.
+It represents the number of failures in a sequence of Bernoulli trials before
+success occurs,
+where $\theta$ is the probability of success.
+\begin{align*}
+p(x=n|\,\theta)
+=
+\theta (1-\theta)^n
+, &  &
+\mathbb{E}(X)
+=
+\frac{1-\theta}{\theta}
+, &  &
+\var(X)
+=
+\frac{1-\theta}{\theta^2}
+\end{align*}
+
+\subsection{Poisson}
+Counts the number of rare events in a fixed interval of time or space,
+if these events occur randomly and
+independent from each other with a constant rate.
+The distribution takes values in $\mathbb{N}_0=0,1,2,3,\ldots$.
+\begin{align*}
+X \sim \text{Pois}(\lambda)
+, &  &
+p(x=n|\,\lambda)
+=
+\frac{\lambda^n}{n!} e^{-\lambda}
+,\quad
+n\in \mathbb{N}_0, \lambda > 0
+, &  &
+\mathbb{E}(X)
+=
+\lambda
+, &  &
+\var(X)
+=
+\lambda
+\end{align*}
+
+\subsection{Exponential}
+The Exponential distribution takes values in $\mathbb{R}_0^+$ representing the
+waiting time until the occurence of an event.
+It models for example the failure rate of technical components.
+$x \in \mathbb{R}_0^+$ and rate parameter $\lambda > 0$
+\begin{align*}
+X \sim \text{Exp}(\lambda)
+, &  &
+p(x|\,\lambda)
+=
+\lambda e^{-\lambda x}
+, &  &
+\mathbb{E}(X)
+=
+\frac{1}{\lambda}
+, &  &
+\var(X)
+=
+\frac{1}{\lambda^2}
+\end{align*}
+
+\subsection{Gamma}
+A Gamma$(a,b)$ distributed random variable has values in $\mathbb{R}_0^+$
+$a$ is the shape parameter and $b$ the rate parameter.
+\begin{align*}
+p(x|\,a,b)
+=
+\frac{b^a}{\Gamma(a)} x^{a-1} e^{-bx}
+ &  &
+\mathbb{E}(X)
+=
+\frac{a}{b}
+ &  &
+\var(X)
+=
+\frac{a}{b^2}
+ &  &
+\operatorname{mode}(X)
+=
+\frac{a-1}{b}
+,\quad a \geq 1
+\end{align*}
+
+\subsection{Hypergeometric}
+Takes parameters $n$, $N$ and $M$ takes values in
+$0,1,2,\ldots,\min\left(n,m\right)$.
+It represents the number of $m$ sucess in $n$ draws,
+\textbf{without replacement},
+from a set of size $N$,
+that contains exactly $M$ objects with a certain feature.
+$m \in \mathbb{N}_0$
+\begin{align*}
+X \sim \text{HyperGeo}(n,N,M)
+, &  &
+p(x=m|\,n,N,M)
+=
+\frac{\binom{M}{m} \binom{N-M}{n-m}}{\binom{N}{n}}
+, &  &
+\mathbb{E}(X)
+=
+n\frac{M}{N}
+, &  &
+\var(X)
+=
+n \frac{M}{N} \frac{N-M}{N} \frac{N-n}{N-1}
+\end{align*}
+
+\subsection{Beta-binomial}
+The Beta-binomial distribution is a Binomial distribution with $N$ trials,
+in which the probabilites of success are randomly drawn
+from a Beta$(a,b)$ distribution.
+$M \sim \text{BetaBin}(N,a,b)$ with $a,b > 0$ and $N \in \mathbb{N}_0$
+\begin{align*}
+p(x|\,N,a,b)
+  & =
+\binom{N}{x} \frac{B(a + x, b+N-x)}{B(a,b)}
+=
+\binom{N}{x} \frac{\Gamma(a + b) \Gamma(a + x) \Gamma(b + N - x)}{
+\Gamma(a) \Gamma(b) \Gamma(a + b + N)}
+, &   &
+\mathbb{E}(X)
+=
+N \frac{a}{a+b}
+\\
+\var(X)
+  & =
+N \frac{a b}{(a + b)^2} \frac{a + b + N}{a + b + 1}
+\end{align*}
+
+\subsection{Gaussian}
+Very common in statistics and takes values in $\mathbb{R}$.
+The central limit theorem shows that under weak conditions i.i.d observations
+converge to a normal distribution.
+$x,\mu \in \mathbb{R}, \sigma \in \mathbb{R}^+$
+\begin{align*}
+X
+\sim
+\text{Norm}(\mu,\sigma^2)
+, &  &
+p(x|\,\mu,\sigma)
+=
+\frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+, &  &
+\mathbb{E}(X)
+=
+\text{mode}(X)
+=
+\mu
+, &  &
+\var(X)
+=
+\sigma^2
+\end{align*}

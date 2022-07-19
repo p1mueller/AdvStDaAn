@@ -1,0 +1,1 @@
+signups = rbinom(length(posterior), 100, posterior)

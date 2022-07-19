@@ -1,0 +1,1 @@
+data2 <- data.frame(MeanX=0.5*(data$x1 + data$x2), DeltaX=data$x1 - data$x2)

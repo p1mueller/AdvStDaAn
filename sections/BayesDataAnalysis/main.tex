@@ -1,0 +1,157 @@
+% !TEX root = ../../AdvStaDaAn.tex
+\section{Bayesian Data Analysis}
+\begin{description}
+\item[Frequentis Approach:] Assume that for a given generative model parameters
+of the model are unknown but fixed and observed data is random
+\item[Bayesian Approach:] For a given generative model there is uncertainty and
+respectively variation of believe about the parameters of the model and
+observed data is fixed and not random at all
+\end{description}
+
+In a Bayesian approach
+\begin{itemize}
+\item uncertainty about model parameters is modelled with probability
+\item prior believe has to be stated and introduced to the model
+\item prior believe gets more and more irrelevant with increasing data
+\end{itemize}
+
+To perform a Bayesian Data Analysis it requires
+\begin{itemize}
+\item \textbf{observed data}, to draw conclusions from
+\item \textbf{generative model} or data generating process
+\item to quantify the uncertainty of parameters in your model,
+i.e. include \textbf{prior information} befor looking at your data
+\end{itemize}
+
+With clear understanding of the random process leading to your data,
+you have to follow three steps
+\begin{enumerate}
+\item set up a full probability model and include all types of uncertainty
+\item condition on observed data (Bayes)
+\item evaluate the fit of the model and posterior's implications
+\end{enumerate}
+
+\subsection{Approximate Bayesian Computation}
+\begin{enumerate}
+\item Observations of data $D$
+\item Model with parameters $\theta=(\theta_1,\theta_2,\ldots,\theta_k)$
+\item $p(\theta)$ is the prior distribution
+\item $p(D|\,\theta)$ is the likelihood function,
+which specifies the sampling distribution of the generative model
+\item Use Bayes theorem to comput the posterior distribution
+$p(\theta|\,D)
+=
+\dfrac{p(D|\,\theta) p(\theta)}{p(D)} \varpropto p(D|\,\theta)p(\theta)$
+\end{enumerate}
+\includegraphics[width=0.6\textwidth]{%
+sections/BayesDataAnalysis/images/sim%
+}
+
+\subsubsection{Rejection Algorithm}
+The rejcection algorithm samples from the posterior distribution.
+Suitable only for moderate sized discrete data.
+
+Repeat:
+\begin{enumerate}
+\item Sample $\theta$ from the prior distribution $p(\theta)$
+\item Sample $D_i$ from the sampling distribution or generative model
+$p(D|\,\theta)$
+\item Collect $\theta$ if $D_i = D$
+or collect if $|T(D_i) - T(D)| < \epsilon$ is a statistic
+\end{enumerate}
+Use summary (sufficient) statistic $T$ to reduce complexity.
+A statistic is sufficient for a probability distribution if the sample from
+which it is calculated gives no additional information than does the statistic.
+
+\subsection{Modeling Prior Believe}
+There is uncertainty about model parameters.
+If we have prior knowledge about the parameter before seeing the observed data,
+we can explicitly state our belief and introduce it into the model.
+
+If we have \textbf{no information} about the parameter and
+don't want to include any bias or assumptions,
+that could influence our analysis,
+we use a uniform prior.
+
+A uniform prior is often called \textbf{uninformative prior},
+because it includes \textbf{no preferences} and
+doesn't favor one value over another.
+
+\subsection{Credible Interval}
+Credible intervals are not unique.
+Suitable intervals are:
+\begin{description}
+\item[Highest Posterior Density Interval (HDI):]  Contains the values with
+highest probability density.
+For a unimodal it's the narrowest possible credible interval.
+Contains all values up to a certain probability threshold.
+\item[Equal-Tailed Interval:]  The probability of being below the interval is
+as likely as being above it.
+Symmetrically trimmed at both ends.
+\end{description}
+
+\subsection{Bayesian Linear Regression}
+Simple linear regression is a statistical model with two variables $X$ and $Y$,
+where we try to predict $Y$ and $X$.
+Assumptions:
+\begin{enumerate}
+\item Distribution of $X$ is arbitrary, perhaps even non-random
+\item If $X=x$, then $Y \sim \beta_0 + \beta_1 x + \epsilon$ for parameters
+$\beta_0,\beta_1$ and some random noise variable $\epsilon$
+\item $\mathbb{E}(\epsilon|\,X=x) = 0$ and $\var(\epsilon|\,X=x) = \sigma^2$,
+for all $x$
+\item $\epsilon$ is uncorrelated across observations
+\end{enumerate}
+For $n$ observations $(x_i,y_i)$ the model says that
+$forall i \in 1,\ldots,n$, $y_i = \beta_0 + \beta_1 + x_i + \epsilon_i$,
+where the noise variables $\epsilon_i$ all have the same expectation $0$ and
+variance $\sigma^2$,
+and $\text{cov}(\epsilon_i,\epsilon_j) = 0, \forall i \neq j$.
+
+\subsubsection{Generative Model}
+\begin{align*}
+\mathcal{L}(b_0, b_1, s^2)
+=
+P(D |\, b_0, b_1, s^2)
+=
+\prod_{i=1}^n \frac{1}{\sqrt{2\pi s^2}}
+e^{-\frac{\left(y_i - (b_0 + b_1 x_i)\right)^2}{2s^2}}
+\prod_{j=1}^{\#\theta} \text{prior}_j(\theta_j|\,\text{params}_j)
+\end{align*}
+\begin{align*}
+y_i
+\sim
+\text{Norm}(\mu, \sigma)
+, &  &
+\mu
+=
+b_0 + b_1 x_i
+, &  &
+b_0
+\sim
+\text{Unif}(-\infty, \infty)
+, &  &
+b_1
+\sim
+\text{Unif}(-\infty, \infty)
+, &  &
+\sigma
+\sim
+\text{Unif}(0, \infty)
+\end{align*}
+For arbitrary values $x$,
+we could simulate values $y$,
+for a given set of parameters $b_0$, $b_1$ and $s^2$,
+where we have to specify the prior distributions for all parameters.
+Then, with Bayes theorem, we express the unnormalized posterior density of
+parameter values conditional on observed data.
+And with the MCMC-method we are ready to draw a random sample from this
+posterior.
+\begin{itemize}
+\item Investigate the trace plot and monitor the acceptance rate to adjust the
+proposal distribution and to select an i.i.d. sample.
+\item If the acceptance rate is low, it may be benefical to propose seperatly
+and randomly each parameter.
+\end{itemize}
+$ $
+\lstinputlisting[style=R]{sections/BayesDataAnalysis/src/bayes_regression.r}

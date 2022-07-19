@@ -1,0 +1,87 @@
+% !TEX root = ../../Distributions.tex
+\begin{landscape}
+\section{Exact Bayes Inference}
+
+A prior distribution is called \textbf{conjugate prior} for a given likelihood
+function if the prior is in the same family of distribution as the resulting
+poster distribution.\newline
+
+\begin{tabularx}{\linewidth}{r >{$\displaystyle}c<{$} X}
+\hline
+Name
+ &
+p(\theta|\,D)
+ &
+Intuition
+\\\hline
+Beta
+ &
+\text{Beta}\left(
+a + \sum_{i=1}^k s_i,\- b + \sum_{i=1}^k n_i - \sum_{i=1}^k s_i
+\right)
+ &
+We observe $k$ experiments,
+all with the same unknown success probability $\theta$.
+In experiment $i$ we count $s_i$ out of $n_i$ successes.
+Maximum a posteriori probability (MAP) estimate $\frac{a - 1}{a + b - 2}$
+\\
+Geometric
+ &
+\text{Beta}\left(a + n, b + \sum_{i=1}^k x_i\right)
+ &
+Consider $n$ observations with outcome $x_1,x_2,\ldots,x_n$, i.e. $x_i$
+failures in experiment $i$ before a success occurs.
+\\
+Poisson
+ &
+\text{Gamma}\left(a + \sum_{i=1}^n x_i, b + n\right)
+ &
+If we observe $n$ periods with $x_i, i=1,\ldots,n$ events and
+assume a Gamma$(a,b)$ prior on $\lambda$.
+\\
+Hypergeometric
+ &
+M - m
+\sim
+\text{BetaBin}(N - n, a + m, b + n - m)
+ &
+The total number of objects $N$ and the number of draws $n$ are given.
+The parameter $M$ is uncertain.
+Where $M$ is the number of objects with a certain feature.
+You observe a sample with $m$ objects out of $n$ with a certain feature.
+\\
+Exponential
+ &
+\text{Gamma}\left(a + 1, b + \sum_{i=1}^n t_i\right)
+ &
+We expect on average the time $\frac{1}{\lambda}$ until an event occurs.
+We observe $n$ time intervals $t_i, i=1,\ldots,n$ between failures in
+components and assume a Gamma$(a,b)$ prior on $\lambda$.
+\\
+Gaussian on $\mu$
+ &
+\text{Norm}\left(
+\left( \frac{m}{s^2} + \frac{\sum_{i=1}^nx_i}{\sigma^2}\right)
+\left(\frac{1}{s^2} + \frac{n}{\sigma^2}\right)^{-1}
+,
+\left(\frac{1}{s^2} + \frac{n}{\sigma^2}\right)^{-1}
+\right)
+ &
+Let $X \sim \text{Norm}(\mu,\sigma^2)$ with fixed $\sigma$.
+We observe a sample $x_1,x_2,\ldots,x_n$ from $X$.
+With $\mu \sim \text{Norm}(m,s^2)$ prior
+\\
+Gaussian on $\sigma$
+ &
+\text{Gamma}\left(
+a + \frac{n}{2},
+b + \frac{\sum_{i=1}^n (x_i -\mu)^2}{2}
+\right)
+ &
+Let $X \sim \text{Norm}(\mu,\sigma^2)$ with fixed $\mu$.
+We observe a sample $x_1,x_2,\ldots,x_n$ from $X$.
+With $\tau \sim \text{Gamma}(a,b)$ prior
+on precision $\tau := \frac{1}{\sigma^2}$.
+\\\hline
+\end{tabularx}
+\end{landscape}

@@ -1,0 +1,1 @@
+data$lx1 <- log(data$x1)

@@ -1,0 +1,142 @@
+% !TEX root = ../../AdvStaDaAn.tex
+\section{Markov Chain Monte Carlo (MCMC)}
+A MCMC-method is a \textbf{random sampler} that generates random values
+$\theta_1,\theta_2,\ldots,\theta_n$,
+from a discrete or continuos state space $S$ according to a probability
+distribution $\pi(\theta)$ on $S$.
+
+Class of algorithms that generates random sample $X_1,\ldots,X_n$ from a
+desired distribution $\pi$ with the help of a Markov chain to approximate
+expectations $\mu = \mathbb{E}_\pi(g(X))$ by sample averages
+$\widehat\mu = \frac{1}{n} \sum_{i=1}^n g(X_i)$ where $\pi$ is the stationary
+distribution of the Markov chain.
+
+\begin{enumerate}
+\item Choose a good proposal distribution
+\item Proposal distribution: Adjust smaller/higher variance dynamically
+\item Discard burn-in
+\item Trace plot should loo like a caterpillar
+\item Make a scatterplot of sampled data
+\item Draw periodically samples from the chain,
+such that there is no dependance between successive sampled states.
+\end{enumerate}
+
+\subsection{Why does it work?}
+The probability of being in state $x$ equals to $\pi(x)$ for any $x \in S$.
+The dynamic $P_{x \rightarrow y}$ denotes the probability of goint to state $y$
+if the current state is $x$.
+$P_{x \rightarrow y}, x, y \in S$ is called transition kernel.
+
+\textbf{Detailed balance} if
+$\pi(x) P_{x \rightarrow y} = \pi(y) P_{y \rightarrow x}$
+hence $P_{x \rightarrow y}$ is called \textbf{stationary distribution} or
+\textbf{equilibrium distribution}
+$\pi(x) = \sum_{y \in S} \pi(y) P_{y \rightarrow x}$
+
+\subsection{Markov Chain}
+$\left\{ X_t, t \in \mathbb{N} \right\}$ sequence of random variables $X_t$ in
+discrete time $t \in \mathbb{N}$ on state space $S$,
+that randomly visits one state after another.
+At each step the random movement to the next state depends only on the previous
+state.
+\begin{align*}
+ & X_1 \rightarrow X_2 \rightarrow X_3 \rightarrow \ldots \rightarrow X_{t-1}
+\rightarrow X_t \rightarrow \ldots
+\\
+ & P(X_t = x_t |\, X_{t-1} = x_{t-1},\ldots,X_1 = x_1)
+=
+P(X_t = x_t |\, X_{t-1} = x_{t-1})
+ &
+\\
+\end{align*}
+Is given by \textbf{transition matrix} or
+kernel $P_{x \rightarrow y} = P(y |\, x),\; \forall x,y \in S$ on a discrete or
+continuos state space $S$.
+
+\begin{tabular}{>{\bfseries}c<{} m{8cm}}
+\hline
+Property
+ &
+\textbf{Condition}
+\\\hline
+Irreducible
+ &
+Possible probability to get from any state to any other state
+\\
+Periodic
+ &
+Certain states can be visited only at periodically recurring time steps
+\\
+Ergodic
+ &
+Has unique stationary distribution $\pi$, which remains unchanged under the
+transition probabilites
+\\\hline
+\end{tabular}
+
+\subsection{Monte Carlo}
+Monte Carlo is the idea of using i.i.d. samples $X_1,\ldots,X_n$ of a random
+generator with density $p$ to approximate expectations by sample averages
+\begin{align*}
+\mu
+=
+\mathbb{E}_p(g(X))
+=
+\begin{cases}
+\displaystyle \int_\mathbb{R} g(x) p(x)\,dx
+ &
+\text{if continuos density}
+\\
+\displaystyle \sum_i g(x_i) p_i\,dx
+ &
+\text{if discrete probabilites}
+\end{cases}
+, &  &
+\widehat\mu
+=
+\frac{1}{n} \sum_{i=1}^n g(X_i)
+, &  &
+\var(\widehat\mu)
+=
+\frac{1}{n-1} \sum_{i=1}^n \left( g(X_i)- \widehat\mu \right)^2
+\end{align*}
+
+\subsection{Metropolis Hastings}
+Let $\pi(\theta)$ be a probability density,
+e.g. the posterior $P(\theta|\,D)$.
+\textbf{Metropolis Hastings} constructs a Markov chain,
+such that the density $\pi(\theta)$ is the stationary distribution.
+
+Let $Q(\theta_\text{prop}|\,\theta)$ be a proposal distribution,
+that generates a new set of parameters $\theta_\text{prop}$ given the current
+set of parameters $\theta$.
+Often this is done by slightly changig $\theta$.
+
+Iterate:
+\begin{enumerate}
+\item Proposal: Simulate $\theta_\text{prop} \sim
+Q(\theta_\text{prop}|\,\theta)$
+\item Acceptance: Simulate $u \sim \text{Unif}(0, 1)$
+If $\dfrac{\pi(\theta_\text{prop})}{\pi(\theta)}
+\dfrac{Q(\theta|\,\theta_\text{prop})}{Q(\theta_\text{prop}|\,\theta)} > u$,
+set $\theta = \theta_\text{prop}$,
+otherwise stay in $\theta$
+\end{enumerate}
+
+\textbf{Recommended:} Acceptance rates between $10\%$ and $70\%$.
+
+\subsection{Metropolis Rejection}
+If $\pi(\theta)$ is a probability density
+on the parameter space $\mathbb{R}^d$,
+choose $z \sim Q$ to be a $d$-dimensional, mean-zero, multivariate normal
+distributed random variable and set $\theta_\text{prop} = \theta + z$.
+Then the proposal density is \textbf{symmetricP}:
+$Q(\theta|\,\theta_\text{prop}) = Q(\theta_\text{prop}|\,\theta)$
+
+Iterate:
+\begin{enumerate}
+\item Proposal: Simulate $z \sim Q$ and set $\theta_\text{prop} = \theta + z$
+\item Metropolis Rejection: Simulate $u \sim \text{Unif}(0, 1)$
+If $\dfrac{\pi(\theta_\text{prop})}{\pi(\theta)} > u$
+set $\theta = \theta_\text{prop}$
+\end{enumerate}

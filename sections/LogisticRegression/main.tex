@@ -1,0 +1,267 @@
+% !TEX root = ../../AdvStaDaAn.tex
+\section{Logistic Regression}
+The \textbf{logistic regression model} is defined by three components
+\begin{itemize}
+\item \textbf{Distribution} The response variable is
+independently binomially distributed
+(includes the Bernoulli distribution with $m_k = 1$).
+Both the expectation and the variance of $\widetilde{Y}_k$ depend only on
+the known $m_k$ and on the unkown $\pi_k$.
+\item \textbf{Linear predictor} The parameter $\pi_k$ depends on $x_k$ only
+through the linear predictor $\eta_k := \beta_0 + \beta_1 \cdot x_k$ for some
+parameter vector $\beta$
+\item \textbf{Link function} There is a link function
+that specifies the connection between $\pi_k$ and
+the linearly related predictors $\eta_k$,
+such as the \textbf{logit link}
+\begin{align*}
+\eta_k
+=
+g(\pi_k)
+=
+\log\left(\frac{\pi_k}{1-\pi_k}\right),
+\end{align*}
+where the logit function is the inverse
+of the logistic distribution function $G$,
+and thus
+\begin{align*}
+\pi_k
+=
+G(\eta_k)
+=
+\frac{\exp(\eta_k)}{1+\exp(\eta_k)}
+=
+\frac{\exp(\beta_0 + \beta_1 \cdot x_k)}{1+\exp(\beta_0 + \beta_1 \cdot x_k)}
+\end{align*}
+\end{itemize}
+One possible rationale for using distribution functions goes as follows.
+Suppose that an unobservable attribute T exists for the patients,
+which describes the probability of the event -
+the random variable $T$ is also called \textbf{latent variable}.
+The response $Y_i$ records whether $T$ is below a threshold $c$ $(Y_i = 0)$
+or above it $(Y i = 1)$.
+The threshold $c$ is set so that the probability $T$ above $c$ is sufficient
+for the event to have occured.
+The function $G$ is then the distribution function
+of the standardized latent variable $T$.
+\begin{align*}
+T_i
+=
+\widetilde{\beta}_0 + \widetilde{\beta}_1 x_i + \tau \cdot T_i^o
+\end{align*}
+where $\tau$ is a scale parameter $T_i^o$ is the standardized version of $T_i$.
+\begin{align*}
+\pi(x_k)
+ & =
+P(Y_i = 1 | x_i)
+= P(T_i > c | x_i)
+\\
+ & =
+P\left( \frac{T_i - \eta_k}{\tau} > \frac{c-\eta_k}{\tau}\right)
+=
+P\left( T_i^o > \frac{c-\eta_k}{\tau} \right)
+\\
+ & =
+G\left( \frac{-c + \eta_k}{\tau} \right)
+=
+G\left( \frac{\widetilde{\beta_0} - c}{\tau} +
+\frac{\widetilde{\beta}_1}{\tau} x_i \right)
+\end{align*}
+
+Popular choices for the distribution function $G$ include the logistic,
+the Gaussian,
+and the Gumbel distribution:
+\begin{tabular}{c c l}
+\hline
+$G(\eta)$    & $g(\pi)$         & Name
+\\\hline
+$\dfrac{\exp(\eta)}{1 + \exp(\eta)}$
+             &
+$\log\left(\dfrac{\pi}{1-\pi}\right)$
+             &
+logit model; logistic regression
+\\
+$\Phi(\eta)$ & $\Phi^{-1}(\pi)$ & probit model
+\\
+$1 - \exp(-\exp(\eta))$
+             &
+$\log(-\log(1 - \pi))$
+             &
+complementary log-log-model
+\\\hline
+\end{tabular}
+
+\subsection{Logit Model}
+Is often used in practice,
+because the coefficients have a direct interpretation as odds.
+\begin{align*}
+\operatorname{odds}(A)
+:=
+\frac{P(Y_i=1)}{P(Y=0)}
+=
+\frac{P(Y_i=1)}{1 - P(Y_i=1)}
+=
+\frac{\pi}{1 - \pi}
+\end{align*}
+The value of $\operatorname{odds}(A)$ tells us how many times more likely
+the occurrence of $A$ compared to the non-occurrence of $A$.
+\begin{align*}
+\log\left(\operatorname{odds}\right)
+=
+\log\left(\frac{\pi_i}{1-\pi_i}\right)
+=
+\beta_0 + \sum_{j=1}^m \beta_j x_i^{(j)}
+\end{align*}
+Thus the coefficients $\beta$ can be interpreted with respect to the log-odds
+as the coefficients in the multiple linear regression model.
+The coefficients are \textbf{multiplicative} for the \textbf{odds}.
+\begin{align*}
+\operatorname{odds}\left(Y_i=1 | x_i\right)
+=
+\frac{\pi_i}{1 - \pi_i}
+=
+\exp\left(\beta_0 + \beta_1 x_i\right)
+=
+\exp\left(\beta_0\right) \cdot \exp\left(\beta_1 x_i\right)
+\end{align*}
+$\Rightarrow$ Regardless of the value of $x_i$,
+an increase by $1$ has the same multiplicative effect $\exp(\beta_1)$
+on the odds.
+
+\subsubsection{Empirical Logits}
+From the above ideas it is clear that the $Y$-axis can be transformed
+so that the relationship between the response $Y_i$ and
+the linear predictor is linear.
+In practise the \textbf{empirical logits} are used:
+\begin{align*}
+\widetilde{Z}_k
+:=
+\log\left(\frac{Y_k^* + 0.5}{m_k - Y_k^* + 0.5}\right)
+\approx
+x_k^T \beta
+,\quad
+\text{where $m_k$ is the number of cases/samples}
+\end{align*}
+
+\subsubsection{Maximum Likelihood Estimation}
+\begin{align*}
+L\left(\beta | y^*, x\right)
+ & =
+\prod_k P\left(Y_k^* = y_k^*\right)
+=
+\prod_k \binom{m_k}{y_k^*} \pi_k^{y_k^*} (1 - \pi_k)^{m_k - y_k^*}
+\\
+ & =
+\prod_k \binom{m_k}{y_k^*} G\left(\beta_0 + \beta_1 x_k\right)^{y_k^*}
+(1 - G\left(\beta_0 + \beta_1 x_k\right))^{m_k - y_k^*}
+\end{align*}
+Maximising the likelihood with respect to $\beta$ is equivalent to maximising
+the log-likelihood
+\begin{align*}
+\ell\left(\beta | y^*\right)
+ & =
+\log\left(L\left(\beta | y^*, x\right)\right)
+=
+\sum_k \log\left(\binom{m_k}{y_k^*}
+\pi_k^{y_k^*} (1 - \pi_k)^{m_k - y_k^*}\right)
+\\
+ & =
+\sum_k \log\binom{m_k}{y_k^*} +
+\sum_k \left(y_k^*\log\left(\pi_k\right) +
+\left(m_k - y_k^*\right)\log\left(1 - \pi_k\right)\right)
+\end{align*}
+To obtain the maximum likelihood estimation of $\beta$
+we take the partial derivatives of $\ell(\beta | y^*)$ with respect to
+$\beta_0$ and $\beta_1$ by applying the chain rule and set them to zero:
+\begin{align*}
+0
+ & =
+\frac{\partial\ell(\beta | y^*)}{\partial \beta_j}
+=
+\sum_k \left(y_k^* \frac{\partial \log(\pi_k)}{\partial \beta_j} +
+\left(m_k - y_k^*\right)
+\frac{\partial \log\left(1 - \pi_k\right)}{\partial\beta_j}\right)
+\\
+ & =
+\sum_k \left(y_k^* \frac{1}{\pi_k} - (m_k - y_k^*) \frac{1}{1-\pi_k}\right)
+\frac{\partial\pi_k}{\partial\beta_j}
+\\
+ & =
+\sum_k \frac{y_k^* (1 - \pi_k) - (m_k - y_k^*) \pi_k}{\pi_k (1 - \pi_k)} j\cdot
+\frac{\partial G(\eta_k)}{\partial\beta_j} x_k^{(j)}
+\end{align*}
+Since $\partial G(\eta)/\partial\eta = \exp(\eta)/(1+\exp(\eta))^2=\pi(1-\pi)$
+for the logit model, we have to solve the implicit \textbf{nonlinear} equation
+system
+\begin{align*}
+\sum_k \left[ y_k - m_k \, G\!\left(x_k^T \widehat{\beta}\right) \right]
+x_k^{(j)}
+=
+0
+\end{align*}
+
+\subsection{Exponential Family}
+A random variable $Y$ with expectation $\mu = \mathbb{E}(Y)$ and
+dispersion $\phi$ has a distribution in the two parameter
+\textbf{exponential family} if the density or probability of $Y$
+can be written in the form
+\begin{align*}
+f(y_i; \mu_i, \phi) = \exp\left(\frac{y_i\,b(\mu_i) - c(\mu_i)}{\phi} w_i +
+d\left(y_i;\phi,w_i\right)\right)
+\end{align*}
+\begin{itemize}
+\item Dispersion parameter $\phi$ is connected to the variance
+\item The value $w_i$ is a fixed known weight
+\item The function $d()$ scales the probability to 1
+\item The functions $b()$ and $c()$ determine the distribution
+\end{itemize}
+\begin{align*}
+\mu_i
+=
+\mathbb{E}(Y_i)
+=
+\frac{c'(\mu_i)}{b'(\mu_i)}
+ &  &
+\var(Y_i)
+=
+\frac{\phi}{w_i} V(\mu_i)
+ &  &
+V(\mu_i)
+=
+\frac{1}{b'(\mu_i)}
+\end{align*}
+where $V(\mu_i)$ is the \textbf{variance function}
+
+\begin{tabular}{l c || c c | c c c c}
+\hline
+Distribution                         & range of $Y$             &
+$\mu$                                & $\var(Y)$                &
+$b(\mu)$                             & $V(\mu)$                 & $\phi$
+                                     & $w$
+\\\hline
+Gaussian$(\mu,\sigma^2)$             & $(-\infty,+\infty)$      &
+$\mu$                                & $\sigma^2$               &
+$\mu$                                & $1$                      & $\sigma^2$
+                                     & $1$
+\\
+Binomial$(m,\pi)$                    & $\frac{1,2,\ldots,m}{m}$ &
+$\pi$                                & $\frac{\pi(1-\pi)}{m}$   &
+$\log\left(\frac{\mu}{1-\mu}\right)$ & $\mu(1-\mu)$             & $1$
+                                     & $m$
+\\
+Poisson$(\lambda)$                   & $0,1,2,\ldots$           &
+$\lambda$                            & $\lambda$                &
+$\log(\mu)$                          & $\mu$                    & $1$
+                                     & $1$
+\\
+Gamma$(\alpha,\beta)$                & $(0,\infty)$             &
+$\frac{\alpha}{\beta}$               & $\frac{\alpha}{\beta^2}$ &
+$-\frac{1}{\mu}$                     & $\mu^2$                  &
+$\frac{1}{\alpha}$                   & $1$
+\\
+Invers\;Gaussian                     & $(0,\infty)$             &
+$\mu$                                & $\frac{\mu^3}{\lambda}$  &
+$-\frac{1}{\mu^2}$                   & $\mu^3$                  &
+$\frac{1}{\lambda}$                  & $1$
+\\\hline
+\end{tabular}

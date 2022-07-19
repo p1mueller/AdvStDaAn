@@ -1,0 +1,30 @@
+\documentclass[titlepage=true]{scrartcl}
+
+\input{header/zusammenfassung}
+
+\input{header/listings}
+\usetikzlibrary{positioning}
+\setDefaultArrayStretch{1.8}
+
+\makeatletter
+
+% Newline after a paragraph
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+	{-3.25ex\@plus -1ex \@minus -.2ex}%
+	{1.5ex \@plus .2ex}%
+	{\normalfont\normalsize\bfseries}}
+\makeatother
+
+\title{Advanced Statistical Data Analysis}
+\author{\input{Contributors}}
+\begin{document}
+
+\lstset{style=R}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{5}
+\tableofcontents \newpage
+
+\input{sections/Distributions/main}
+\input{sections/ExactBayes/main}
+
+\end{document}
